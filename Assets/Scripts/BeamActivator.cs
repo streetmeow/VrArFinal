@@ -7,6 +7,8 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class BeamActivator : MonoBehaviour
 {
+    // 오른쪽 손의 빔을 켜줍니다. 
+    
     [SerializeField] private GameObject controller;
     [SerializeField] private InputActionReference reference;
 
