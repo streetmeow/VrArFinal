@@ -14,10 +14,6 @@ public class FollowCamRatation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        gameObject.transform.eulerAngles = new Vector3(
-            gameObject.transform.eulerAngles.x,
-            cam.transform.eulerAngles.y,
-            gameObject.transform.eulerAngles.z
-        );;
+        gameObject.transform.position = cam.transform.position;
     }
 }
