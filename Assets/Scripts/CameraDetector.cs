@@ -21,18 +21,7 @@ public class CameraDetector : MonoBehaviour
     void Start()
     {
         _meshRenderer = GetComponent<MeshRenderer>();
-        switch (hightlightColor)
-        {
-            case Colors.Red:
-                _meshRenderer.material.color = Color.red;
-                break;
-            case Colors.Green:
-                _meshRenderer.material.color = Color.green;
-                break;
-            case Colors.Blue:
-                _meshRenderer.material.color = Color.blue;
-                break;
-        }
+        
     }
 
     // Update is called once per frame
@@ -48,7 +37,18 @@ public class CameraDetector : MonoBehaviour
             if (_timeCount >= 2f)
             {
                 _isHighlighted = true;
-                _meshRenderer.material.color = Color.red;
+                switch (hightlightColor)
+                {
+                    case Colors.Red:
+                        _meshRenderer.material.color = Color.red;
+                        break;
+                    case Colors.Green:
+                        _meshRenderer.material.color = Color.green;
+                        break;
+                    case Colors.Blue:
+                        _meshRenderer.material.color = Color.blue;
+                        break;
+                }
             }
         }
 
