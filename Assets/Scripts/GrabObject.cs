@@ -6,17 +6,25 @@ using UnityEngine.InputSystem;
 
 public class GrabObject : MonoBehaviour
 {
-    public HandPosition handPosition;
-    public InputActionReference reference;
-    public Rigidbody rb;
+    private HandPosition handPosition;
+    private InputActionReference reference;
+    private InputActionReference releaseTrigger;
+    private InputActionReference xTrigger;
     private bool grabbed = false;
-    private Vector3 currentPos;
-    private Vector3 movePos;
+    private Queue<Vector3> posRecord;
+    private Vector3 lastPos;
     
     private void Awake()
     {
+        handPosition = HandPosition.Instance;
+        reference = CustomInputs.instance.leftHandSelectButton;
+        releaseTrigger = CustomInputs.instance.leftHandTriggerButton;
+        xTrigger = CustomInputs.instance.xButton;
         reference.action.Enable();
         reference.action.performed += GrabObjectVoid;
+        releaseTrigger.action.performed += ReleaseObject;
+        xTrigger.action.performed += DropObject;
+        posRecord = new Queue<Vector3>();
     }
 
     private void Update()
@@ -24,8 +32,9 @@ public class GrabObject : MonoBehaviour
         if (grabbed)
         {
             gameObject.transform.position = handPosition.GetLeftHand().position + new Vector3(0.1f, 0.1f, 0.1f);
-            movePos = gameObject.transform.position - currentPos;
-            currentPos = gameObject.transform.position;
+            if (posRecord.Count > 15) posRecord.Dequeue();
+            posRecord.Enqueue(gameObject.transform.position);
+            
         }
     }
 
@@ -34,16 +43,42 @@ public class GrabObject : MonoBehaviour
         if (Vector3.Distance(handPosition.GetLeftHand().position, gameObject.transform.position) < 0.2f && grabbed == false)
         {
             grabbed = true;
-            currentPos = gameObject.transform.position;
-        } else if (grabbed)
+        }
+    }
+
+    private void ReleaseObject(InputAction.CallbackContext context)
+    {
+        if (grabbed)
         {
             grabbed = false;
             Invoke("Throw", 0.01f);
+            lastPos = gameObject.transform.position;
         }
     }
 
     private void Throw()
     {
-        gameObject.GetComponent<Rigidbody>().AddForce(Vector3.Normalize(movePos) * 10, ForceMode.Impulse);
+        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+        rb.angularVelocity = Vector3.zero;
+        Vector3 v = lastPos - posRecord.Dequeue();
+        // Debug.Log(v);
+        posRecord = new Queue<Vector3>();
+        rb.AddForce(v * 100, ForceMode.Impulse);
+    }
+
+    private void DropObject(InputAction.CallbackContext context)
+    {
+        if (grabbed)
+        {
+            grabbed = false;
+            posRecord = new Queue<Vector3>();
+        }
+    }
+
+    private void Drop()
+    {
+        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+        rb.angularVelocity = Vector3.zero;
+        rb.AddForce(-Vector3.up * 0.2f, ForceMode.Impulse);
     }
 }
