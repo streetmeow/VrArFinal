@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public class GrabObject : MonoBehaviour
 {
-    public Transform target;
+    public HandPosition handPosition;
     public InputActionReference reference;
     public Rigidbody rb;
     private bool grabbed = false;
@@ -23,7 +23,7 @@ public class GrabObject : MonoBehaviour
     {
         if (grabbed)
         {
-            gameObject.transform.position = target.position + new Vector3(0.1f, 0.1f, 0.1f);
+            gameObject.transform.position = handPosition.GetLeftHand().position + new Vector3(0.1f, 0.1f, 0.1f);
             movePos = gameObject.transform.position - currentPos;
             currentPos = gameObject.transform.position;
         }
@@ -31,7 +31,7 @@ public class GrabObject : MonoBehaviour
 
     private void GrabObjectVoid(InputAction.CallbackContext context)
     {
-        if (Vector3.Distance(target.position, gameObject.transform.position) < 0.2f && grabbed == false)
+        if (Vector3.Distance(handPosition.GetLeftHand().position, gameObject.transform.position) < 0.2f && grabbed == false)
         {
             grabbed = true;
             currentPos = gameObject.transform.position;
