@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -14,7 +15,7 @@ public class GrabObject : MonoBehaviour
     private Queue<Vector3> posRecord;
     private Vector3 lastPos;
     
-    private void Awake()
+    private void Start()
     {
         handPosition = HandPosition.Instance;
         reference = CustomInputs.instance.leftHandSelectButton;
@@ -40,7 +41,10 @@ public class GrabObject : MonoBehaviour
 
     private void GrabObjectVoid(InputAction.CallbackContext context)
     {
-        if (Vector3.Distance(handPosition.GetLeftHand().position, gameObject.transform.position) < 0.2f && grabbed == false)
+        Debug.Log("VAR");
+        if ((Vector3.Distance(handPosition.GetLeftHand().position, gameObject.transform.position) < 0.2f
+                || Vector3.Distance(new Vector3(handPosition.GetLeftHand().position.x, 0, handPosition.GetLeftHand().position.z), 
+                        new Vector3(gameObject.transform.position.x, 0, gameObject.transform.position.z)) < 0.25f) && grabbed == false)
         {
             grabbed = true;
         }

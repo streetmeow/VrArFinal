@@ -21,6 +21,8 @@ public class CustomInputs : MonoBehaviour
     // public GameObject guideImage;
     public Rigidbody playerRigidBody;
     public Transform modelTransform;
+    private LineRenderer line;
+    private bool isLineActivated = false;
     
     private bool _isGrounded = false;
 
@@ -34,6 +36,7 @@ public class CustomInputs : MonoBehaviour
     {
         leftThumb.action.performed += RotatePlayer;
         rightThumb.action.performed += MovePlayer;
+        aButton.action.performed += ChangeArm;
         // yButton.action.started += GuideTrigger;
     }
 
@@ -62,6 +65,11 @@ public class CustomInputs : MonoBehaviour
     public void SetGrounded(bool value)
     {
         _isGrounded = value;
+    }
+
+    public void ChangeArm(InputAction.CallbackContext context)
+    {
+        isLineActivated = !isLineActivated;
     }
 
     // Update is called once per frame

@@ -11,7 +11,7 @@ public class CliffStone : MonoBehaviour
     private InputActionReference reference2;
     private Rigidbody rb;
     
-    private void Awake()
+    private void Start()
     {
         handTransform = HandPosition.Instance;
         headTransform = CustomInputs.instance.playerTransform;
