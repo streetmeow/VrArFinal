@@ -14,7 +14,9 @@ public class GrabObject : MonoBehaviour
     private bool grabbed = false;
     private Queue<Vector3> posRecord;
     private Vector3 lastPos;
-    
+
+    //public GameObject note;
+
     private void Start()
     {
         handPosition = HandPosition.Instance;
@@ -26,6 +28,8 @@ public class GrabObject : MonoBehaviour
         releaseTrigger.action.performed += ReleaseObject;
         xTrigger.action.performed += DropObject;
         posRecord = new Queue<Vector3>();
+
+        
     }
 
     private void Update()
@@ -35,14 +39,14 @@ public class GrabObject : MonoBehaviour
             gameObject.transform.position = handPosition.GetLeftHand().position + new Vector3(0.1f, 0.1f, 0.1f);
             if (posRecord.Count > 15) posRecord.Dequeue();
             posRecord.Enqueue(gameObject.transform.position);
-            
+
         }
     }
 
     private void GrabObjectVoid(InputAction.CallbackContext context)
     {
         Debug.Log("VAR");
-        if ((Vector3.Distance(handPosition.GetLeftHand().position, gameObject.transform.position) < 0.2f
+        if ((Vector3.Distance(handPosition.GetLeftHand().position, gameObject.transform.position) < 1f
                 || Vector3.Distance(new Vector3(handPosition.GetLeftHand().position.x, 0, handPosition.GetLeftHand().position.z), 
                         new Vector3(gameObject.transform.position.x, 0, gameObject.transform.position.z)) < 0.25f) && grabbed == false)
         {
@@ -55,6 +59,12 @@ public class GrabObject : MonoBehaviour
         if (grabbed)
         {
             grabbed = false;
+
+            if (gameObject.CompareTag("Torch"))
+            {
+                gameObject.GetComponent<Rigidbody>().useGravity = true;
+            }
+
             Invoke("Throw", 0.01f);
             lastPos = gameObject.transform.position;
         }
@@ -85,4 +95,5 @@ public class GrabObject : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
         rb.AddForce(-Vector3.up * 0.2f, ForceMode.Impulse);
     }
+
 }

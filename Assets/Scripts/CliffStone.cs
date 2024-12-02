@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.Rendering.DebugUI;
 
 public class CliffStone : MonoBehaviour
 {
@@ -35,7 +34,13 @@ public class CliffStone : MonoBehaviour
         {
             rb.useGravity = false;
             headTransform.position = Vector3.MoveTowards(headTransform.position, 
-                gameObject.transform.position + new Vector3(0, 1f, -0.5f), 0.3f);
-        } 
+                gameObject.transform.position + headTransform.TransformDirection(new Vector3(0, 1f, -0.5f)), 0.3f);
+        }
+        if (headTransform.position.y > -5.2f)
+        {
+            headTransform.position = Vector3.MoveTowards(headTransform.position,
+                headTransform.position + headTransform.TransformDirection(new Vector3(0, 5f, 1.5f)), 0.3f);
+            rb.useGravity = true;
+        }
     }
 }

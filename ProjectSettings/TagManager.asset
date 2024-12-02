@@ -5,6 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
+  - Torch
+  - Fireplace
+  - CrystalBall
+  - Scroll
+  - Exit
+  - ExitHidden
   layers:
   - Default
   - TransparentFX

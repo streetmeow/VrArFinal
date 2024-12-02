@@ -54,7 +54,8 @@ public class CustomInputs : MonoBehaviour
         if (!playerRigidBody.useGravity) return;
         Vector2 value = context.ReadValue<Vector2>();
         float speed = 1.5f * Time.deltaTime;
-        playerTransform.position += new Vector3(value.x, 0, value.y) * speed;
+        // playerTransform.position += new Vector3(value.x, 0, value.y) * speed;
+        playerTransform.position += playerTransform.TransformDirection(new Vector3(value.x, 0, value.y)) * speed;
     }
 
     private void GuideTrigger(InputAction.CallbackContext context)
