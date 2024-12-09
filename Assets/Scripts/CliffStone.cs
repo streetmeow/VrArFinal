@@ -24,23 +24,24 @@ public class CliffStone : MonoBehaviour
 
     private void Update()
     {
-        
+        if (!rb.useGravity && headTransform.position.y > -5.2f)
+        {
+            Vector3 currentPosition = headTransform.position;
+            currentPosition.y = -3f;
+            headTransform.position = currentPosition;
+            rb.useGravity = true;
+        }
     }
 
     private void GrabCliffVoid(InputAction.CallbackContext context)
     {
-        if (Vector3.Distance(handTransform.GetLeftHand().position, gameObject.transform.position) < 1.3f || 
-                Vector3.Distance(handTransform.GetRightHand().position, gameObject.transform.position) < 1.3f)
+        if (headTransform.position.y < -5.2f &&
+            Vector3.Distance(handTransform.GetLeftHand().position, gameObject.transform.position) < 0.5f || 
+                Vector3.Distance(handTransform.GetRightHand().position, gameObject.transform.position) < 0.5f)
         {
             rb.useGravity = false;
             headTransform.position = Vector3.MoveTowards(headTransform.position, 
-                gameObject.transform.position + headTransform.TransformDirection(new Vector3(0, 1f, -0.5f)), 0.3f);
-        }
-        if (headTransform.position.y > -5.2f)
-        {
-            headTransform.position = Vector3.MoveTowards(headTransform.position,
-                headTransform.position + headTransform.TransformDirection(new Vector3(0, 5f, 1.5f)), 0.3f);
-            rb.useGravity = true;
+                gameObject.transform.position + headTransform.TransformDirection(new Vector3(0, 1f, -0.5f)), 0.75f);
         }
     }
 }

@@ -11,6 +11,7 @@ TagManager:
   - Scroll
   - Exit
   - ExitHidden
+  - Book
   layers:
   - Default
   - TransparentFX

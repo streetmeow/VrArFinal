@@ -41,7 +41,7 @@ public class EventManager : MonoBehaviour
         {
             ActivateCrystalBall();
         }
-        if (crystalball_activated && scroll != null && Vector3.Distance(scroll.transform.position, crystalball.transform.position) < 2f)
+        if (crystalball_activated && scroll != null && Vector3.Distance(scroll.transform.position, crystalball.transform.position) < 1f)
         {
             ActivateMagic();
         }

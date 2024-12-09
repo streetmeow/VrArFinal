@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.Rendering.DebugUI;
 
 public class GrabObject : MonoBehaviour
 {
@@ -14,8 +16,10 @@ public class GrabObject : MonoBehaviour
     private bool grabbed = false;
     private Queue<Vector3> posRecord;
     private Vector3 lastPos;
+    private Transform headTransform;
 
-    //public GameObject note;
+    public GameObject noteUI;
+    private bool bookOpen = false;
 
     private void Start()
     {
@@ -28,14 +32,25 @@ public class GrabObject : MonoBehaviour
         releaseTrigger.action.performed += ReleaseObject;
         xTrigger.action.performed += DropObject;
         posRecord = new Queue<Vector3>();
+        headTransform = CustomInputs.instance.playerTransform;
 
-        
     }
 
     private void Update()
     {
         if (grabbed)
         {
+            
+            if (!bookOpen && gameObject.CompareTag("Book"))
+            {
+                OpenBook();
+            }
+            if (bookOpen && noteUI != null)
+            {
+                noteUI.transform.position = headTransform.position + headTransform.forward * 1.5f + new Vector3(0, 0.3f, 0);
+                noteUI.transform.rotation = Quaternion.LookRotation(headTransform.position - noteUI.transform.position) * Quaternion.Euler(-10f, 0f, 0f);
+                noteUI.transform.Rotate(0f, 180f, 0f);
+            }
             gameObject.transform.position = handPosition.GetLeftHand().position + new Vector3(0.1f, 0.1f, 0.1f);
             if (posRecord.Count > 15) posRecord.Dequeue();
             posRecord.Enqueue(gameObject.transform.position);
@@ -58,13 +73,15 @@ public class GrabObject : MonoBehaviour
     {
         if (grabbed)
         {
-            grabbed = false;
-
+            if (bookOpen && gameObject.CompareTag("Book"))
+            {
+                CloseBook();
+            }
             if (gameObject.CompareTag("Torch"))
             {
                 gameObject.GetComponent<Rigidbody>().useGravity = true;
             }
-
+            grabbed = false;
             Invoke("Throw", 0.01f);
             lastPos = gameObject.transform.position;
         }
@@ -84,6 +101,14 @@ public class GrabObject : MonoBehaviour
     {
         if (grabbed)
         {
+            if (bookOpen && gameObject.CompareTag("Book"))
+            {
+                CloseBook();
+            }
+            if (gameObject.CompareTag("Torch"))
+            {
+                gameObject.GetComponent<Rigidbody>().useGravity = true;
+            }
             grabbed = false;
             posRecord = new Queue<Vector3>();
         }
@@ -94,6 +119,18 @@ public class GrabObject : MonoBehaviour
         Rigidbody rb = gameObject.GetComponent<Rigidbody>();
         rb.angularVelocity = Vector3.zero;
         rb.AddForce(-Vector3.up * 0.2f, ForceMode.Impulse);
+    }
+
+    private void OpenBook()
+    {
+        noteUI.SetActive(true);
+        bookOpen = true;
+    }
+
+    private void CloseBook()
+    {
+        noteUI.SetActive(false);
+        bookOpen = false;
     }
 
 }
