@@ -13,7 +13,7 @@ public class UIActivator : MonoBehaviour
 
     private void Awake()
     {
-        reference.action.Enable();
+        // reference.action.Enable();
         reference.action.performed += ToggleUi;
     }
 
